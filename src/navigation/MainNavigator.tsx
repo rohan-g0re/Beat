@@ -21,11 +21,18 @@ export const MainNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#1C1C1E',
-          borderTopColor: '#2C2C2E',
+          backgroundColor: '#000000',
+          borderTopColor: '#3A3A3C',
+          height: 64,
+          paddingTop: 6,
+          paddingBottom: 10,
         },
-        tabBarActiveTintColor: '#2196F3',
-        tabBarInactiveTintColor: '#6E6E6E',
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#8E8E93',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          letterSpacing: 0.2,
+        },
       }}
     >
       <Tab.Screen

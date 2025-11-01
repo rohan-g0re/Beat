@@ -139,7 +139,7 @@ export const StatsScreen = () => {
 
   const renderStatCard = (label: string, value: string | number, color: string, icon?: string) => (
     <View style={styles.statCard}>
-      <Text style={[styles.statValue, { color }]}>
+      <Text style={styles.statValue}>
         {typeof value === 'number' ? formatNumber(value) : value}
       </Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -211,17 +211,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: spacing.md,
+    paddingHorizontal: 32,
+    paddingTop: 16,
+    paddingBottom: 32,
   },
   title: {
-    fontSize: typography.fontSize['3xl'],
-    fontWeight: typography.fontWeight.bold,
-    color: colors.text.primary,
+    fontSize: 32,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    color: '#FFFFFF',
     marginBottom: spacing.xs,
   },
   subtitle: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.secondary,
+    fontSize: 16,
+    color: '#8E8E93',
     marginBottom: spacing.lg,
   },
   statsGrid: {
@@ -231,60 +234,66 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: colors.background.elevated,
+    backgroundColor: '#1C1C1E',
     padding: spacing.md,
-    borderRadius: borderRadius.lg,
+    borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 100,
   },
   statValue: {
-    fontSize: typography.fontSize['4xl'],
-    fontWeight: typography.fontWeight.bold,
+    fontSize: 36,
+    fontWeight: '700',
+    letterSpacing: -1,
+    color: '#FFFFFF',
     marginBottom: spacing.xs,
   },
   statLabel: {
-    fontSize: typography.fontSize.sm,
-    color: colors.text.secondary,
+    fontSize: 14,
+    color: '#8E8E93',
+    letterSpacing: 0.2,
     textAlign: 'center',
   },
   largeCard: {
-    backgroundColor: colors.background.elevated,
+    backgroundColor: '#1C1C1E',
     padding: spacing.xl,
-    borderRadius: borderRadius.lg,
+    borderRadius: 4,
     alignItems: 'center',
     marginBottom: spacing.md,
   },
   largeCardLabel: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.secondary,
+    fontSize: 14,
+    color: '#8E8E93',
+    letterSpacing: 0.2,
     marginBottom: spacing.sm,
   },
   largeCardValue: {
-    fontSize: typography.fontSize['5xl'],
-    fontWeight: typography.fontWeight.bold,
+    fontSize: 48,
+    fontWeight: '700',
+    letterSpacing: -1,
+    color: '#FFFFFF',
     marginBottom: spacing.sm,
   },
   largeCardSubtext: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.secondary,
+    fontSize: 16,
+    color: '#8E8E93',
   },
   chartPlaceholder: {
-    backgroundColor: colors.background.elevated,
+    backgroundColor: '#1C1C1E',
     padding: spacing.xl,
-    borderRadius: borderRadius.lg,
+    borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 200,
   },
   chartPlaceholderText: {
-    fontSize: typography.fontSize.xl,
-    fontWeight: typography.fontWeight.semiBold,
-    color: colors.text.primary,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#FFFFFF',
     marginBottom: spacing.xs,
   },
   chartPlaceholderSubtext: {
-    fontSize: typography.fontSize.sm,
-    color: colors.text.secondary,
+    fontSize: 14,
+    color: '#8E8E93',
   },
 });

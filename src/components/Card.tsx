@@ -106,8 +106,8 @@ export const Card: React.FC<CardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.background.elevated,
-    borderRadius: borderRadius.lg,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 4,
     marginBottom: spacing.md,
     overflow: 'hidden',
     position: 'relative',
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: spacing.md,
     right: spacing.md,
-    backgroundColor: colors.background.card,
+    backgroundColor: '#2C2C2E',
     borderRadius: borderRadius.md,
     width: 36,
     height: 36,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 120,
-    backgroundColor: colors.background.card,
+    backgroundColor: '#2C2C2E',
   },
   image: {
     width: '100%',
@@ -153,14 +153,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   title: {
-    color: colors.text.primary,
-    fontSize: typography.fontSize.lg,
-    fontWeight: typography.fontWeight.semiBold,
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
     marginBottom: spacing.xs,
   },
   subtitle: {
-    color: colors.text.secondary,
-    fontSize: typography.fontSize.sm,
+    color: '#8E8E93',
+    fontSize: 14,
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -168,13 +168,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   tag: {
-    backgroundColor: colors.primary[900],
+    backgroundColor: '#2C2C2E',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: borderRadius.sm,
   },
   tagText: {
-    color: colors.primary[300],
+    color: '#8E8E93',
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.medium,
   },
