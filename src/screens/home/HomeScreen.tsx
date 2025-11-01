@@ -35,7 +35,7 @@ const MONTH_NAMES = [
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
-  const { userId } = useCurrentUser();
+  const { userId, initialized } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -45,8 +45,10 @@ export const HomeScreen = () => {
   const { currentStreak, longestStreak } = calculateStreaks(sessions);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (initialized) {
+      loadData();
+    }
+  }, [initialized]);
 
   const loadData = async () => {
     try {

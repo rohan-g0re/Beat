@@ -31,7 +31,7 @@ interface StatsData {
 }
 
 export const StatsScreen = () => {
-  const { userId } = useCurrentUser();
+  const { userId, initialized } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<StatsData>({
     totalWorkouts: 0,
@@ -44,8 +44,10 @@ export const StatsScreen = () => {
   });
 
   useEffect(() => {
-    loadStats();
-  }, []);
+    if (initialized) {
+      loadStats();
+    }
+  }, [initialized]);
 
   const loadStats = async () => {
     try {

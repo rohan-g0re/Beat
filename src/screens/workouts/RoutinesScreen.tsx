@@ -32,7 +32,7 @@ type NavigationProp = NativeStackNavigationProp<WorkoutsStackParamList>;
 
 export const RoutinesScreen = () => {
   const navigation = useNavigation<NavigationProp>();
-  const { userId } = useCurrentUser();
+  const { userId, initialized } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -41,8 +41,10 @@ export const RoutinesScreen = () => {
   const { setRoutines: setStoreRoutines, setDays, addRoutine } = useRoutinesStore();
 
   useEffect(() => {
-    loadRoutines();
-  }, []);
+    if (initialized) {
+      loadRoutines();
+    }
+  }, [initialized]);
 
   const loadRoutines = async () => {
     try {

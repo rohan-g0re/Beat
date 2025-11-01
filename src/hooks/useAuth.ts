@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase, signInWithEmail, signUpWithEmail, signOut } from '@services/supabase';
+import { supabase, signInWithEmail, signUpWithEmail, signOut, upsertProfile } from '@services/supabase';
 import { initializePurchases, signOutPurchases } from '@services/monetization';
 
 interface AuthState {
@@ -37,7 +37,7 @@ export const useAuth = () => {
 
     // Get initial session
     supabase.auth.getSession()
-      .then(({ data: { session } }) => {
+      .then(async ({ data: { session } }) => {
         clearTimeout(timeoutId);
         setAuthState({
           user: session?.user ?? null,
@@ -50,6 +50,17 @@ export const useAuth = () => {
         // Initialize RevenueCat if user is signed in
         if (session?.user) {
           initializePurchases(session.user.id).catch(console.error);
+          // Ensure profile exists (FK requirement for routines.user_id → profiles.id)
+          try {
+            await upsertProfile({
+              id: session.user.id,
+              email: session.user.email ?? null,
+              display_name: (session.user.user_metadata as any)?.name ?? null,
+              // units/equipment defaulted by DB
+            } as any);
+          } catch (e) {
+            console.error('Profile upsert failed:', e);
+          }
         }
       })
       .catch((error) => {
@@ -77,6 +88,12 @@ export const useAuth = () => {
       // Initialize RevenueCat on sign in
       if (session?.user) {
         initializePurchases(session.user.id).catch(console.error);
+        // Ensure profile exists as soon as we have a session
+        upsertProfile({
+          id: session.user.id,
+          email: session.user.email ?? null,
+          display_name: (session.user.user_metadata as any)?.name ?? null,
+        } as any).catch(err => console.error('Profile upsert failed:', err));
       } else {
         // Sign out from RevenueCat
         signOutPurchases().catch(console.error);
