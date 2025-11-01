@@ -1,0 +1,226 @@
+# Development Changes Log
+
+> **Purpose**: Track temporary changes made for testing and development that should be reviewed before production deployment.
+
+---
+
+## 🔧 Active Development Changes
+
+### 1. **Authentication Bypass for Testing** *(Added: 2025-11-01)*
+
+**Location**: `src/hooks/useAuth.ts` + `src/screens/auth/SignInScreen.tsx`
+
+**Change**:
+- Added `developerBypass()` function to skip authentication
+- Added hidden easter egg: Tap "FITTRACKER" logo 7 times to bypass auth
+- Added 3-second timeout to Supabase auth initialization to prevent infinite loading with invalid credentials
+
+**Why**: Enable testing of main app features without setting up Supabase credentials
+
+**Action Before Production**:
+- [ ] Remove or disable the `developerBypass()` easter egg
+- [ ] Ensure proper Supabase credentials are configured
+- [ ] Test full auth flow end-to-end
+
+**Code Locations**:
+```typescript
+// src/hooks/useAuth.ts - Lines 97-104
+const developerBypass = () => {
+  setAuthState(prev => ({
+    ...prev,
+    loading: false,
+    initialized: true,
+    bypass: true,
+  }));
+};
+
+// src/screens/auth/SignInScreen.tsx - Lines 46-70
+const handleLogoPress = () => {
+  const newCount = devClickCount + 1;
+  setDevClickCount(newCount);
+  
+  if (newCount >= 7) {
+    Alert.alert('Developer Mode', 'Bypass authentication?', [
+      { text: 'Cancel', style: 'cancel', onPress: () => setDevClickCount(0) },
+      { text: 'Bypass', onPress: () => { developerBypass(); setDevClickCount(0); } },
+    ]);
+  }
+};
+```
+
+---
+
+### 2. **Supabase Auth Timeout** *(Added: 2025-11-01)*
+
+**Location**: `src/hooks/useAuth.ts`
+
+**Change**:
+- Added 3-second timeout to `supabase.auth.getSession()` call
+- If Supabase doesn't respond within 3 seconds, app proceeds with loading complete
+
+**Why**: Prevent app from hanging indefinitely when Supabase credentials are invalid or service is unreachable
+
+**Action Before Production**:
+- [ ] Verify Supabase is properly configured
+- [ ] Consider increasing timeout to 5-10 seconds for production
+- [ ] Add proper error UI instead of just console warnings
+
+**Code Location**:
+```typescript
+// src/hooks/useAuth.ts - Lines 28-63
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    console.warn('Auth initialization timed out - proceeding with bypass mode available');
+    setAuthState(prev => ({ ...prev, loading: false, initialized: true }));
+  }, 3000);
+  
+  // ... rest of auth initialization
+}, []);
+```
+
+---
+
+### 3. **RevenueCat Native Module Lazy Loading** *(Added: 2025-11-01)*
+
+**Location**: `src/services/monetization.ts`
+
+**Change**:
+- Changed from static import to dynamic require for `react-native-purchases`
+- Added checks for module availability and Expo Go detection
+- Falls back gracefully when module is unavailable (e.g., in Expo Go)
+
+**Why**: Prevent app crashes in Expo Go since RevenueCat requires native modules
+
+**Action Before Production**:
+- [ ] Test in-app purchases in development build
+- [ ] Verify RevenueCat SDK is properly configured
+- [ ] Ensure purchase flows work on real devices
+
+**Code Location**:
+```typescript
+// src/services/monetization.ts - Lines 14-46
+const loadPurchasesModule = (): PurchasesModule | null => {
+  if (purchasesModule !== undefined) return purchasesModule;
+  
+  if (Constants.appOwnership === 'expo') {
+    console.warn('RevenueCat unavailable in Expo Go');
+    purchasesModule = null;
+    return null;
+  }
+  
+  // ... dynamic require logic
+};
+```
+
+---
+
+## 📋 Placeholder Screens
+
+**Current Status**: All main screens are placeholder implementations showing "TODO" messages
+
+**Screens Needing Implementation**:
+- [ ] `HomeScreen.tsx` - Calendar, streaks, quick-links
+- [ ] `RoutinesScreen.tsx` - List of workout routines
+- [ ] `RoutineDetailScreen.tsx` - Days grid (Mon-Sun)
+- [ ] `DayDetailScreen.tsx` - Exercise list with tags
+- [ ] `WorkoutScreen.tsx` - Active workout session
+- [ ] `StatsScreen.tsx` - Statistics and charts
+- [ ] `SettingsScreen.tsx` - Settings and profile
+- [ ] `PaywallScreen.tsx` - Subscription upgrade
+
+---
+
+## 🔑 Environment Variables
+
+**Current Status**: Using placeholder values in `.env`
+
+**Required for Production**:
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+EXPO_PUBLIC_RC_API_KEY_IOS=your-revenuecat-ios-key
+EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key
+```
+
+**Action Items**:
+- [ ] Create Supabase project and get credentials
+- [ ] Set up RevenueCat account and get API keys
+- [ ] Update `.env` with real credentials
+- [ ] Test auth and monetization flows
+
+---
+
+## 📦 Dependency Status
+
+**All Dependencies Installed**: ✅
+- Expo SDK 54
+- React 19.1.0
+- React Native 0.81.5
+- All peer dependencies resolved
+
+**Expo Doctor Status**: ✅ All checks passing (17/17)
+
+---
+
+## 🚧 Known Issues / TODOs
+
+### High Priority
+1. **No Supabase Backend** - Database not set up, migrations not run
+2. **No Asset Files** - App icons, splash screens commented out in config
+3. **Placeholder UI** - All screens need actual implementation
+4. **No RevenueCat Setup** - In-app purchases not configured
+
+### Medium Priority
+5. **No Tests** - Test suite not implemented
+6. **No HealthKit Integration** - iOS health data sync not built (Phase 2)
+7. **No Widget Extension** - iOS widget not built yet
+
+### Low Priority
+8. **No Onboarding Flow** - First-run experience not implemented
+9. **No Deep Linking Tested** - OAuth callbacks not verified
+10. **No Error Boundaries** - Need global error handling
+
+---
+
+## 🔄 Testing Instructions
+
+### Quick Start Testing (Current State)
+
+1. **Start Expo Dev Server**:
+   ```bash
+   npm start
+   ```
+
+2. **Open in Expo Go** (iOS/Android):
+   - Scan QR code with camera (iOS) or Expo Go app (Android)
+
+3. **Bypass Authentication**:
+   - Wait 3 seconds for loading (or until sign-in screen appears)
+   - Tap "FITTRACKER" logo **7 times** quickly
+   - Tap "Bypass" in alert dialog
+
+4. **Explore Tabs**:
+   - Bottom tab bar should appear
+   - Navigate between Home, Workouts, Statistics, Settings
+   - Each shows placeholder "TODO" screen
+
+### Expected Behavior
+- ✅ App loads within 3 seconds
+- ✅ Sign-in screen appears with beautiful UI
+- ✅ Bypass works after 7 taps
+- ✅ Tab bar navigation works
+- ⚠️ All screens show placeholder content
+
+---
+
+## 📝 Notes
+
+- This document should be updated whenever development-specific changes are made
+- Before each deployment, review this document and address action items
+- All temporary changes should be clearly marked with comments in code
+
+---
+
+**Last Updated**: November 1, 2025
+**Maintained By**: Development Team
+

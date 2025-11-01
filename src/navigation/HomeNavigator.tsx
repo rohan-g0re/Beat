@@ -1,0 +1,40 @@
+/**
+ * Home Navigator - Home tab stack navigation
+ */
+
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '@types/navigation';
+
+// Import screens
+import { HomeScreen } from '@screens/home/HomeScreen';
+import { SessionDetailScreen } from '@screens/home/SessionDetailScreen';
+
+const Stack = createNativeStackNavigator<HomeStackParamList>();
+
+export const HomeNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: '#1C1C1E',
+        },
+        headerTintColor: '#FFFFFF',
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ title: 'Home' }}
+      />
+      <Stack.Screen
+        name="SessionDetail"
+        component={SessionDetailScreen}
+        options={{ title: 'Workout Details' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
