@@ -166,10 +166,33 @@ EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key      # ⚠️ Optiona
 
 ---
 
+## 🗄️ Database Setup Status
+
+**Status**: ⚠️ Migration files ready, needs to be run in Supabase
+
+**What's Ready**:
+- ✅ All 5 migration files created
+- ✅ Combined migration SQL file: `supabase/combined_migration.sql`
+- ✅ Setup guide created: `docs/SUPABASE_SETUP_GUIDE.md`
+
+**Next Steps** *(See SUPABASE_SETUP_GUIDE.md for detailed instructions)*:
+1. [ ] Open Supabase SQL Editor
+2. [ ] Run the combined migration SQL
+3. [ ] Verify 8 tables are created
+4. [ ] Create profile for existing test user
+5. [ ] Test data flow from app to database
+
+**Tables to be created**:
+- `profiles`, `routines`, `routine_days`, `routine_exercises`
+- `workout_sessions`, `workout_exercises`, `workout_sets`
+- `user_entitlements`
+
+---
+
 ## 🚧 Known Issues / TODOs
 
 ### High Priority
-1. **No Supabase Backend** - Database not set up, migrations not run
+1. **Supabase Database Not Initialized** - Migrations ready but not run yet *(See SUPABASE_SETUP_GUIDE.md)*
 2. **No Asset Files** - App icons, splash screens commented out in config
 3. **Placeholder UI** - All screens need actual implementation
 4. **No RevenueCat Setup** - In-app purchases not configured
@@ -242,6 +265,6 @@ EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key      # ⚠️ Optiona
 
 ---
 
-**Last Updated**: November 1, 2025
+**Last Updated**: November 1, 2025 (Database setup prepared)
 **Maintained By**: Development Team
 
