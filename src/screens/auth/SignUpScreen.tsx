@@ -64,7 +64,7 @@ export const SignUpScreen = () => {
     } else {
       Alert.alert(
         'Success!',
-        'Account created successfully. Please check your email to confirm your account.',
+        'Account created successfully. Please sign in to continue.',
         [
           {
             text: 'OK',

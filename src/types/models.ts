@@ -6,6 +6,8 @@ export interface Profile {
   id: string;
   email: string | null;
   display_name: string | null;
+  height: number | null;
+  weight: number | null;
   units: 'metric' | 'imperial';
   equipment: string[];
   created_at: string;
