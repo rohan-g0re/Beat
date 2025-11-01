@@ -18,9 +18,15 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@hooks/useAuth';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { AuthStackParamList } from '../../types/navigation';
+
+type SignInScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
 
 export const SignInScreen = () => {
   const { signIn, developerBypass, loading } = useAuth();
+  const navigation = useNavigation<SignInScreenNavigationProp>();
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -108,7 +114,7 @@ export const SignInScreen = () => {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => Alert.alert('Coming Soon', 'Account creation will be available soon')}
+              onPress={() => navigation.navigate('SignUp')}
             >
               <Text style={styles.secondaryButtonText}>Create FitTracker account</Text>
             </TouchableOpacity>
@@ -153,6 +159,8 @@ export const SignInScreen = () => {
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
+              autoComplete="email"
+              textContentType="emailAddress"
               editable={!isSubmitting}
             />
           </View>
@@ -170,11 +178,14 @@ export const SignInScreen = () => {
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoCorrect={false}
+                autoComplete="password"
+                textContentType="password"
                 editable={!isSubmitting}
               />
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
+                activeOpacity={0.7}
               >
                 <Text style={styles.eyeIcon}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
               </TouchableOpacity>

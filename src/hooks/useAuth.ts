@@ -25,15 +25,15 @@ export const useAuth = () => {
   });
 
   useEffect(() => {
-    // Timeout fallback if Supabase takes too long (e.g., invalid credentials)
+    // Timeout fallback if Supabase takes too long (e.g., network issues)
     const timeoutId = setTimeout(() => {
-      console.warn('Auth initialization timed out - proceeding with bypass mode available');
+      console.warn('Auth initialization timed out - check network connection or Supabase credentials');
       setAuthState(prev => ({
         ...prev,
         loading: false,
         initialized: true,
       }));
-    }, 3000); // 3 second timeout
+    }, 5000); // 5 second timeout
 
     // Get initial session
     supabase.auth.getSession()

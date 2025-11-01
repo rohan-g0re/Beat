@@ -1,5 +1,5 @@
 # Development Changes Log
-
+![1762003808081](image/dev_changes/1762003808081.png)![1762003821747](image/dev_changes/1762003821747.png)
 > **Purpose**: Track temporary changes made for testing and development that should be reviewed before production deployment.
 
 ---
@@ -50,19 +50,20 @@ const handleLogoPress = () => {
 
 ---
 
-### 2. **Supabase Auth Timeout** *(Added: 2025-11-01)*
+### 2. **Supabase Auth Timeout** *(Added: 2025-11-01, Updated: Increased to 5s)*
 
 **Location**: `src/hooks/useAuth.ts`
 
 **Change**:
-- Added 3-second timeout to `supabase.auth.getSession()` call
-- If Supabase doesn't respond within 3 seconds, app proceeds with loading complete
+- Added 5-second timeout to `supabase.auth.getSession()` call
+- If Supabase doesn't respond within 5 seconds, app proceeds with loading complete
+- Changed from throwing error to warning when credentials missing
 
-**Why**: Prevent app from hanging indefinitely when Supabase credentials are invalid or service is unreachable
+**Why**: Prevent app from hanging indefinitely when Supabase has network issues or slow response times
 
 **Action Before Production**:
-- [ ] Verify Supabase is properly configured
-- [ ] Consider increasing timeout to 5-10 seconds for production
+- [x] Verify Supabase is properly configured *(Real credentials added)*
+- [ ] Test timeout behavior with airplane mode
 - [ ] Add proper error UI instead of just console warnings
 
 **Code Location**:
@@ -70,9 +71,9 @@ const handleLogoPress = () => {
 // src/hooks/useAuth.ts - Lines 28-63
 useEffect(() => {
   const timeoutId = setTimeout(() => {
-    console.warn('Auth initialization timed out - proceeding with bypass mode available');
+    console.warn('Auth initialization timed out - check network connection or Supabase credentials');
     setAuthState(prev => ({ ...prev, loading: false, initialized: true }));
-  }, 3000);
+  }, 5000); // Increased to 5 seconds
   
   // ... rest of auth initialization
 }, []);
@@ -114,11 +115,14 @@ const loadPurchasesModule = (): PurchasesModule | null => {
 
 ---
 
-## 📋 Placeholder Screens
+## 📋 Screen Implementation Status
 
-**Current Status**: All main screens are placeholder implementations showing "TODO" messages
+**Authentication Screens**: ✅ Complete
+- [x] `SignInScreen.tsx` - Email/password login with beautiful Equinox+ inspired UI
+- [x] `SignUpScreen.tsx` - Account creation with validation
+- [ ] `OnboardingScreen.tsx` - First-run setup (units, equipment)
 
-**Screens Needing Implementation**:
+**Main App Screens**: ⚠️ Placeholder implementations
 - [ ] `HomeScreen.tsx` - Calendar, streaks, quick-links
 - [ ] `RoutinesScreen.tsx` - List of workout routines
 - [ ] `RoutineDetailScreen.tsx` - Days grid (Mon-Sun)
@@ -132,20 +136,20 @@ const loadPurchasesModule = (): PurchasesModule | null => {
 
 ## 🔑 Environment Variables
 
-**Current Status**: Using placeholder values in `.env`
+**Current Status**: ✅ Supabase credentials configured in `.env`
 
-**Required for Production**:
+**Required Variables**:
 ```env
-EXPO_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-EXPO_PUBLIC_RC_API_KEY_IOS=your-revenuecat-ios-key
-EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key
+EXPO_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co  # ✅ Configured
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key                     # ✅ Configured
+EXPO_PUBLIC_RC_API_KEY_IOS=your-revenuecat-ios-key              # ⚠️ Optional (for IAP)
+EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key      # ⚠️ Optional (for IAP)
 ```
 
 **Action Items**:
-- [ ] Create Supabase project and get credentials
-- [ ] Set up RevenueCat account and get API keys
-- [ ] Update `.env` with real credentials
+- [x] Create Supabase project and get credentials
+- [x] Update `.env` with Supabase credentials
+- [ ] Set up RevenueCat account and get API keys (optional for now)
 - [ ] Test auth and monetization flows
 
 ---
@@ -194,20 +198,37 @@ EXPO_PUBLIC_RC_API_KEY_ANDROID=your-revenuecat-android-key
 2. **Open in Expo Go** (iOS/Android):
    - Scan QR code with camera (iOS) or Expo Go app (Android)
 
-3. **Bypass Authentication**:
-   - Wait 3 seconds for loading (or until sign-in screen appears)
+3. **Option A - Real Authentication** (Recommended):
+   - Wait for sign-in screen to load (up to 5 seconds)
+   
+   **To Sign Up:**
+   - Tap "Create FitTracker account" button
+   - Fill in email, password, and confirm password
+   - Tap "Create account"
+   - Check your email for confirmation link (if email confirmation is enabled in Supabase)
+   - Return to sign-in screen and log in
+   
+   **To Sign In:**
+   - Enter your email and password
+   - Tap "Sign in"
+   - App navigates to main tab bar
+
+4. **Option B - Developer Bypass** (Quick testing):
+   - Wait for sign-in screen to appear
    - Tap "FITTRACKER" logo **7 times** quickly
    - Tap "Bypass" in alert dialog
+   - Immediately see main app
 
-4. **Explore Tabs**:
+5. **Explore Tabs**:
    - Bottom tab bar should appear
    - Navigate between Home, Workouts, Statistics, Settings
    - Each shows placeholder "TODO" screen
 
 ### Expected Behavior
-- ✅ App loads within 3 seconds
+- ✅ App loads within 5 seconds
 - ✅ Sign-in screen appears with beautiful UI
-- ✅ Bypass works after 7 taps
+- ✅ Real authentication with Supabase works (if credentials valid)
+- ✅ Bypass works after 7 taps (for quick testing)
 - ✅ Tab bar navigation works
 - ⚠️ All screens show placeholder content
 

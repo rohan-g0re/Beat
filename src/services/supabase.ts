@@ -5,14 +5,18 @@
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Database } from '@types/database';
+import type { Database } from '../types/database';
 import Constants from 'expo-constants';
 
 const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl || '';
 const supabaseAnonKey = Constants.expoConfig?.extra?.supabaseAnonKey || '';
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+  console.warn(
+    'Missing Supabase environment variables. Please ensure .env file exists with:\n' +
+    'EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co\n' +
+    'EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key'
+  );
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
