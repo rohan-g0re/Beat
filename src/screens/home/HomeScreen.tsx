@@ -11,6 +11,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -104,6 +105,14 @@ export const HomeScreen = () => {
     }
   };
 
+  const goToPreviousMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
   const renderCalendar = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
@@ -135,9 +144,17 @@ export const HomeScreen = () => {
     return (
       <View style={styles.calendarContainer}>
         <View style={styles.calendarHeader}>
+          <TouchableOpacity onPress={goToPreviousMonth} style={styles.navButton}>
+            <Text style={styles.navArrow}>‹</Text>
+          </TouchableOpacity>
+          
           <Text style={styles.monthTitle}>
-            {MONTH_NAMES[month]} {year}
+            {MONTH_NAMES[month]}, {year}
           </Text>
+          
+          <TouchableOpacity onPress={goToNextMonth} style={styles.navButton}>
+            <Text style={styles.navArrow}>›</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.weekDays}>
@@ -280,13 +297,28 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   calendarHeader: {
-    marginBottom: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 4,
+  },
+  navButton: {
+    padding: 8,
+    minWidth: 40,
+    alignItems: 'center',
+  },
+  navArrow: {
+    fontSize: 28,
+    fontWeight: '300',
+    color: '#FFFFFF',
   },
   monthTitle: {
     fontSize: 20,
     fontWeight: '600',
     letterSpacing: 0,
     color: '#FFFFFF',
+    flex: 1,
     textAlign: 'center',
   },
   weekDays: {
